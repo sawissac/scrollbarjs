@@ -1,0 +1,20 @@
+{
+  "name": "scrollbarjs",
+  "version": "1.0.0",
+  "description": "Simple detection for scrollbar.",
+  "main": "scrollbar.js",
+  "scripts": {
+    "tsc:sb": "tsc --target es6 --removeComments --noEmitOnError ./scrollbar.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sawissac/scrollbarjs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sawissac/scrollbarjs/issues"
+  },
+  "homepage": "https://github.com/sawissac/scrollbarjs#readme"
+}
