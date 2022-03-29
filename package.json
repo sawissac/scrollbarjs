@@ -1,6 +1,6 @@
 {
   "name": "scrollbarjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple detection for scrollbar.",
   "main": "scrollbar.js",
   "scripts": {

@@ -1,4 +1,4 @@
-export interface scrollBar {
+export interface ScrollBar {
   onScroll(
     callback: (direction: { scrollY: -1 | 0 | 1; scrollX: -1 | 0 | 1 }) => void
   ): void;
@@ -8,7 +8,7 @@ export interface scrollBar {
   removeScrollBarAction(): void;
 }
 
-export class ScrollDetect implements scrollBar {
+export class ScrollDetect implements ScrollBar {
   private direction: { scrollY: -1 | 0 | 1; scrollX: -1 | 0 | 1 };
   private positionY: { pre: number; cur: number };
   private positionX: { pre: number; cur: number };
@@ -33,8 +33,10 @@ export class ScrollDetect implements scrollBar {
         root: true,
       };
     } else {
-      this.targetElement.target = document.querySelector(option.target);
-      this.targetElement.root = false;
+      this.targetElement = {
+        target: document.querySelector(option.target),
+        root: false
+      }
     }
   }
   public onScroll(
@@ -100,18 +102,38 @@ export class ScrollDetect implements scrollBar {
     behavior?: "smooth" | "auto"
   ): void {
     if (options === "y") {
-      document.scrollingElement!.scrollTo({
-        top: pos,
-        left: this.getScrollPosX(),
-        behavior: behavior === undefined ? "smooth" : "auto",
-      });
+      if(this.targetElement.root === true){
+        document.scrollingElement!.scrollTo({
+          top: pos,
+          left: this.getScrollPosX(),
+          behavior: behavior === undefined ? "smooth" : "auto",
+        });
+      }
+      if(this.targetElement.root === false){
+        let ele = this.targetElement.target as Element;
+        ele.scrollTo({
+          top: pos,
+          left: this.getScrollPosX(),
+          behavior: behavior === undefined ? "smooth" : "auto"
+        })
+      }
     }
     if (options === "x") {
-      document.scrollingElement!.scrollTo({
-        top: this.getScrollPosY(),
-        left: pos,
-        behavior: behavior === undefined ? "smooth" : "auto",
-      });
+      if(this.targetElement.root === true){
+        document.scrollingElement!.scrollTo({
+          top: this.getScrollPosY(),
+          left: pos,
+          behavior: behavior === undefined ? "smooth" : "auto",
+        });
+      }
+      if(this.targetElement.root === false){
+        let ele = this.targetElement.target as Element;
+        ele.scrollTo({
+          top: this.getScrollPosY(),
+          left: pos,
+          behavior: behavior === undefined ? "smooth" : "auto",
+        })
+      }
     }
   }
   public removeScrollBarAction() {

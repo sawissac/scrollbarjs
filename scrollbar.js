@@ -19,8 +19,10 @@ export class ScrollDetect {
             };
         }
         else {
-            this.targetElement.target = document.querySelector(option.target);
-            this.targetElement.root = false;
+            this.targetElement = {
+                target: document.querySelector(option.target),
+                root: false
+            };
         }
     }
     onScroll(callback) {
@@ -76,18 +78,38 @@ export class ScrollDetect {
     }
     scrollTo(options, pos, behavior) {
         if (options === "y") {
-            document.scrollingElement.scrollTo({
-                top: pos,
-                left: this.getScrollPosX(),
-                behavior: behavior === undefined ? "smooth" : "auto",
-            });
+            if (this.targetElement.root === true) {
+                document.scrollingElement.scrollTo({
+                    top: pos,
+                    left: this.getScrollPosX(),
+                    behavior: behavior === undefined ? "smooth" : "auto",
+                });
+            }
+            if (this.targetElement.root === false) {
+                let ele = this.targetElement.target;
+                ele.scrollTo({
+                    top: pos,
+                    left: this.getScrollPosX(),
+                    behavior: behavior === undefined ? "smooth" : "auto"
+                });
+            }
         }
         if (options === "x") {
-            document.scrollingElement.scrollTo({
-                top: this.getScrollPosY(),
-                left: pos,
-                behavior: behavior === undefined ? "smooth" : "auto",
-            });
+            if (this.targetElement.root === true) {
+                document.scrollingElement.scrollTo({
+                    top: this.getScrollPosY(),
+                    left: pos,
+                    behavior: behavior === undefined ? "smooth" : "auto",
+                });
+            }
+            if (this.targetElement.root === false) {
+                let ele = this.targetElement.target;
+                ele.scrollTo({
+                    top: this.getScrollPosY(),
+                    left: pos,
+                    behavior: behavior === undefined ? "smooth" : "auto",
+                });
+            }
         }
     }
     removeScrollBarAction() {
