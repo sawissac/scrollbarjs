@@ -1,5 +1,7 @@
 export interface scrollBar {
-  onScroll(callback: (e: -1 | 0 | 1) => void): void;
+  onScroll(
+    callback: (direction: { scrollY: -1 | 0 | 1; scrollX: -1 | 0 | 1 }) => void
+  ): void;
   getScrollPosY(): number;
   getScrollPosX(): number;
   scrollTo(options: "x" | "y", pos: number, behavior: "smooth" | "auto"): void;
@@ -7,40 +9,66 @@ export interface scrollBar {
 }
 
 export class ScrollDetect implements scrollBar {
-  private direction: -1 | 0 | 1;
-  private position: { pre: number; cur: number };
+  private direction: { scrollY: -1 | 0 | 1; scrollX: -1 | 0 | 1 };
+  private positionY: { pre: number; cur: number };
+  private positionX: { pre: number; cur: number };
   private targetElement: { target: Document | Element; root: boolean };
   private scrollAction: () => void;
   constructor(option?: { target: string }) {
-    this.position = {
+    this.direction = {
+      scrollX: 0,
+      scrollY: 0
+    }
+    this.positionY = {
+      pre: 0,
+      cur: 0,
+    };
+    this.positionX = {
       pre: 0,
       cur: 0,
     };
     if (option === undefined) {
-        this.targetElement = {
-            target: document,
-            root: true,
-        };
-    }else{
-        this.targetElement.target = document.querySelector(option.target);
-        this.targetElement.root = false;
+      this.targetElement = {
+        target: document,
+        root: true,
+      };
+    } else {
+      this.targetElement.target = document.querySelector(option.target);
+      this.targetElement.root = false;
     }
-}
-  public onScroll(callback: (direction: 0 | 1 | -1) => void): void {
+  }
+  public onScroll(
+    callback: (direction: { scrollY: -1 | 0 | 1; scrollX: -1 | 0 | 1 }) => void
+  ): void {
     let scrollAction = () => {
-      this.position.cur = this.getScrollPosY();
+      this.positionY.cur = this.getScrollPosY();
 
-      if (this.position.cur > this.position.pre) {
-        this.direction = 1;
-        this.position.pre = this.position.cur;
+      if (this.positionY.cur > this.positionY.pre) {
+        this.direction.scrollY = 1;
+        this.positionY.pre = this.positionY.cur;
       }
-      if (this.position.cur < this.position.pre) {
-        this.direction = -1;
-        this.position.pre = this.position.cur;
+      if (this.positionY.cur < this.positionY.pre) {
+        this.direction.scrollY = -1;
+        this.positionY.pre = this.positionY.cur;
       }
-      if (this.position.cur === 0) {
-        this.direction = 0;
+      if (this.positionY.cur === 0) {
+        this.direction.scrollY = 0;
       }
+
+      this.positionX.cur = this.getScrollPosX();
+
+      if (this.positionX.cur > this.positionX.pre) {
+        this.direction.scrollX = 1;
+        this.positionX.pre = this.positionX.cur;
+      }
+      if (this.positionX.cur < this.positionX.pre) {
+        this.direction.scrollX = -1;
+        this.positionX.pre = this.positionX.cur;
+      }
+      if (this.positionX.cur === 0) {
+        this.direction.scrollX = 0;
+      }
+
       callback(this.direction);
     };
     this.scrollAction = scrollAction;
@@ -86,8 +114,11 @@ export class ScrollDetect implements scrollBar {
       });
     }
   }
-  public removeScrollBarAction(){
-      this.targetElement.target.removeEventListener("scroll",this.scrollAction,true); 
+  public removeScrollBarAction() {
+    this.targetElement.target.removeEventListener(
+      "scroll",
+      this.scrollAction,
+      true
+    );
   }
 }
-

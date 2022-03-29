@@ -1,6 +1,14 @@
 export class ScrollDetect {
     constructor(option) {
-        this.position = {
+        this.direction = {
+            scrollX: 0,
+            scrollY: 0
+        };
+        this.positionY = {
+            pre: 0,
+            cur: 0,
+        };
+        this.positionX = {
             pre: 0,
             cur: 0,
         };
@@ -17,17 +25,29 @@ export class ScrollDetect {
     }
     onScroll(callback) {
         let scrollAction = () => {
-            this.position.cur = this.getScrollPosY();
-            if (this.position.cur > this.position.pre) {
-                this.direction = 1;
-                this.position.pre = this.position.cur;
+            this.positionY.cur = this.getScrollPosY();
+            if (this.positionY.cur > this.positionY.pre) {
+                this.direction.scrollY = 1;
+                this.positionY.pre = this.positionY.cur;
             }
-            if (this.position.cur < this.position.pre) {
-                this.direction = -1;
-                this.position.pre = this.position.cur;
+            if (this.positionY.cur < this.positionY.pre) {
+                this.direction.scrollY = -1;
+                this.positionY.pre = this.positionY.cur;
             }
-            if (this.position.cur === 0) {
-                this.direction = 0;
+            if (this.positionY.cur === 0) {
+                this.direction.scrollY = 0;
+            }
+            this.positionX.cur = this.getScrollPosX();
+            if (this.positionX.cur > this.positionX.pre) {
+                this.direction.scrollX = 1;
+                this.positionX.pre = this.positionX.cur;
+            }
+            if (this.positionX.cur < this.positionX.pre) {
+                this.direction.scrollX = -1;
+                this.positionX.pre = this.positionX.cur;
+            }
+            if (this.positionX.cur === 0) {
+                this.direction.scrollX = 0;
             }
             callback(this.direction);
         };

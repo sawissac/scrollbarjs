@@ -5,22 +5,20 @@ const scrollDetect = new ScrollDetect();
 
 // scroll detect function
 scrollDetect.onScroll((dir) => {
-  // 1 is scrolling down
-  if (dir === 1) {
-    //...
-  }
-
+  //-1 is scrolling up
   // 0 is initial place
-  if (dir === 0) {
+  // 1 is scrolling down
+  if (dir.scrollX === 0) {
     //...
   }
 
-  // -1 is scrolling up
-  if (dir === -1) {
+  //-1 is scrolling left
+  // 0 is initial place
+  // 1 is scrolling right
+  if (dir.scrollY === 0) {
     //...
   }
 });
-
 // get scroll Y positon
 scrollDetect.getScrollPosY();
 
